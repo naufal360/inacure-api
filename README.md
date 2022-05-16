@@ -1,15 +1,24 @@
 # inacure-api
 
-### Sign In
+## Sign In
 
 /api/v1/auth/signin
 
-### Sign Up
+```json
+{
+  "email": "naufal@incure.com",
+  "password": "123456"
+}
+```
 
-/api/v1/auth/
+## Sign Up
 
-### Update
+/api/v1/auth/signup
 
-/api/v1/auth/
-
-### User
+```json
+{
+  "name": "Naufal Inacure",
+  "email": "naufal@inacure",
+  "password": "123456"
+}
+```
