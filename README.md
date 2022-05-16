@@ -31,10 +31,46 @@
 
 ### Create Article
 
+- Method: POST
+
+- Url: /api/v1/articles
+
 ```json
 {
+  "image": "file",
   "title": "string",
   "description": "string",
   "type": "string"
+}
+```
+
+### Create Article
+
+- Method: GET
+
+- Url: /api/v1/articles
+
+```json
+{
+  "error": "boolean",
+  "message": "string",
+  "data": [
+    {
+      "photo": "string",
+      "title": "string",
+      "description": "string",
+      "createdAt": "string",
+      "type": "string",
+      "like": "number"
+    },
+    {
+      "photo": "string",
+      "title": "string",
+      "description": "string",
+      "createdAt": "string",
+      "type": "string",
+      "like": "number"
+    }
+  ]
 }
 ```
