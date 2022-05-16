@@ -2,23 +2,39 @@
 
 ## Sign In
 
-/api/v1/auth/signin
+- Method: POST
+
+- Url: /api/v1/auth/signin
 
 ```json
 {
-  "email": "naufal@incure.com",
-  "password": "123456"
+  "email": "string",
+  "password": "string"
 }
 ```
 
 ## Sign Up
 
-/api/v1/auth/signup
+- Method: POST
+
+- Url: /api/v1/auth/signup
 
 ```json
 {
-  "name": "Naufal Inacure",
-  "email": "naufal@inacure",
-  "password": "123456"
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+```
+
+## Article
+
+### Create Article
+
+```json
+{
+  "title": "string",
+  "description": "string",
+  "type": "string"
 }
 ```
