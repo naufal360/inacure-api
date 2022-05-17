@@ -3,7 +3,6 @@
 ## Sign In
 
 - Method: POST
-
 - Url: /api/v1/auth/signin
 
 ```json
@@ -16,7 +15,6 @@
 ## Sign Up
 
 - Method: POST
-
 - Url: /api/v1/auth/signup
 
 ```json
@@ -29,26 +27,11 @@
 
 ## Article
 
-### Create Article
-
-- Method: POST
-
-- Url: /api/v1/articles
-
-```json
-{
-  "image": "file",
-  "title": "string",
-  "description": "string",
-  "type": "string"
-}
-```
-
-### Create Article
+### Get Article
 
 - Method: GET
-
 - Url: /api/v1/articles
+- Header: Bearer token
 
 ```json
 {
@@ -56,20 +39,13 @@
   "message": "string",
   "data": [
     {
-      "photo": "string",
-      "title": "string",
+      "imageUrl": "string",
+      "name": "string",
+      "latinName": "string",
+      "family": "string",
       "description": "string",
-      "createdAt": "string",
-      "type": "string",
-      "like": "number"
-    },
-    {
-      "photo": "string",
-      "title": "string",
-      "description": "string",
-      "createdAt": "string",
-      "type": "string",
-      "like": "number"
+      "ingredient": "string",
+      "efficacy": "string"
     }
   ]
 }

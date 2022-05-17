@@ -17,6 +17,7 @@ const appendUrl = (url) => `${VERSION_API}${url}`;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Auth
 app.use(appendUrl('/auth'), authRouter);
 
 // must be authentication
