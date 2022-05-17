@@ -1,0 +1,17 @@
+{
+  "name": "toga-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-dev": "nodemon ./app/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "nodemon": "^2.0.16"
+  }
+}
