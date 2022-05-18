@@ -1,6 +1,6 @@
 const Response = require('../model/Response');
 
-const pageNotFound = (req, res) => {
+const pageNotFound = (_, res) => {
   res.json(new Response.Error(true, 'Page Not Found'));
 };
 

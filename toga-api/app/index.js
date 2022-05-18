@@ -26,9 +26,8 @@ const appendUrl = (url) => `${VERSION_API}${url}`;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Auth
+// ROUTER
 app.use(appendUrl('/auth'), authRouter);
-
 app.use(appendUrl('/articles'), articleRouter);
 
 // ENDPOINT NOT CREATED
