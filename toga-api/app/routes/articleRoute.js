@@ -7,5 +7,6 @@ const router = new express.Router();
 // MIDDLEWARE REQUIRE AUTHENTICATION
 router.use(requireAuth);
 router.get('/', articleController.getArticles);
+router.post('/post', articleController.postArticles);
 
 module.exports = router;
