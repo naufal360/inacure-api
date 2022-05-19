@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./app/index.js",
     "start:dev": "nodemon ./app/index.js"
   },
   "author": "",
@@ -16,7 +17,9 @@
     "http-status": "^1.5.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.3.3",
+    "mongoose": "^6.3.3"
+  },
+  "devDependencies": {
     "nodemon": "^2.0.16"
   }
 }
