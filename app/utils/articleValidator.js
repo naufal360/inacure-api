@@ -1,6 +1,6 @@
-const Joi = require('Joi');
+const Joi = require('joi');
 
-const articleValidasi = Joi.object({
+const articleValidator = Joi.object({
     imageUrl: Joi.string().required(),
     name: Joi.string().required(),
     latinName: Joi.string().required(),
@@ -10,4 +10,4 @@ const articleValidasi = Joi.object({
     efficacy: Joi.array().items(Joi.string()),
 });
 
-module.export = articleValidasi;
+module.exports = articleValidator;

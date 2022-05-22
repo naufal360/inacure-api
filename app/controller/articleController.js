@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const Response = require('../model/Response');
 const Article = require('../model/Article');
-const articleValidation = require('../utils/articleValidator');
+const articleValidator = require('../utils/articleValidator');
 
 const getArticles = async (req, res) => {
   let response = null;
@@ -24,7 +24,7 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
-     } = await articleValidation.validateAsync(req.body);
+     } = await articleValidator.validateAsync(req.body);
 
      const article = new Article({
       imageUrl,
