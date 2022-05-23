@@ -1,5 +1,8 @@
 const tf = require("@tensorflow/tfjs-node");
 const fs = require("fs");
+const Response = require('../model/Response');
+const httpStatus = require('http-status');
+const Article = require('../model/Article');
 
 function readImage(path) {
   //reads the entire contents of a file.
@@ -49,15 +52,23 @@ async function makePrediction(req, res, next) {
     }
     const image = readImage(file);
 
-    const output = {};
     const model = await tf.loadGraphModel(
-      "file://vgg19_model/vgg19_saved_model/model.json"
+      "file://vgg19_saved_model/model.json"
     );
-    const predictions = await model.predict(image).dataSync();
-    output.predictions = argMax(predictions);
-    console.log("Classification Results:", output.predictions);
-    res.statusCode = 200;
-    res.json(output);
+    const output = await model.predict(image).dataSync();
+    const predictions = argMax(output);
+    console.log("Classification Results:", predictions);
+    const article = await Article.findOne({
+      codeIdentity: predictions[1],
+    });
+    if(!article || predictions[0] <= 0.5) {
+      const response = new Response.Error(true, "Gambar tidak terdeteksi");
+      res.status(httpStatus.BAD_REQUEST).json(response);
+      return;
+    }
+    const response = new Response.Success(false, null, article);
+    res.status(httpStatus.OK).json(response);
+
   } catch (err) {
     console.log(err);
   }

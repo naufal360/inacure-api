@@ -8,6 +8,7 @@ const articleValidator = Joi.object({
     description: Joi.string().required(),
     ingredient: Joi.string().required(),
     efficacy: Joi.array().items(Joi.string()),
+    codeIdentity: Joi.number().required(),
 });
 
 module.exports = articleValidator;

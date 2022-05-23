@@ -24,6 +24,7 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
+      codeIdentity,
     } = await articleValidator.validateAsync(req.body);
 
     const article = new Article({
@@ -34,6 +35,7 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
+      codeIdentity
     });
 
     const articleSave = await article.save();
