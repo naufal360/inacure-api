@@ -1,12 +1,12 @@
-const httpStatus = require('http-status');
-const Response = require('../model/Response');
-const Article = require('../model/Article');
-const articleValidator = require('../utils/articleValidator');
+const httpStatus = require("http-status");
+const Response = require("../model/Response");
+const Article = require("../model/Article");
+const articleValidator = require("../utils/articleValidator");
 
 const getArticles = async (req, res) => {
   let response = null;
   try {
-    res.status(httpStatus.OK).json({ message: 'Hai, Article' });
+    res.status(httpStatus.OK).json({ message: "Hai, Article" });
   } catch (error) {
     response = new Response.Error(true, error.message);
     res.status(httpStatus.BAD_REQUEST).json(response);
@@ -16,7 +16,7 @@ const getArticles = async (req, res) => {
 const postArticles = async (req, res) => {
   let response = null;
   try {
-    const { 
+    const {
       imageUrl,
       name,
       latinName,
@@ -24,9 +24,9 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
-     } = await articleValidator.validateAsync(req.body);
+    } = await articleValidator.validateAsync(req.body);
 
-     const article = new Article({
+    const article = new Article({
       imageUrl,
       name,
       latinName,
@@ -34,15 +34,15 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
-     });
+    });
 
-     const articleSave = await article.save();
-     response = new Response.Success(false, null, articleSave);
-     res.status(httpStatus.OK).json(response);
+    const articleSave = await article.save();
+    response = new Response.Success(false, null, articleSave);
+    res.status(httpStatus.OK).json(response);
   } catch (error) {
     response = new Response.Error(true, error.message);
     res.status(httpStatus.BAD_REQUEST).json(response);
   }
-}
+};
 
 module.exports = { getArticles, postArticles };
