@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   },
 });
 const imageFileFilter = (req, file, callback) => {
-  var ext = path.extname(file.originalname);
+  const ext = path.extname(file.originalname);
   if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
     return callback(new Error("Only images are allowed"));
   }
