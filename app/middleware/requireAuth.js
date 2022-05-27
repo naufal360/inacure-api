@@ -1,12 +1,12 @@
-const jwt = require('jsonwebtoken');
-const httpStatus = require('http-status');
-const User = require('../model/User');
-const Response = require('../model/Response');
-const clearToken = require('../utils/clearToken');
+const jwt = require("jsonwebtoken");
+const httpStatus = require("http-status");
+const User = require("../model/User");
+const Response = require("../model/Response");
+const clearToken = require("../utils/clearToken");
 
 const requireAuth = (req, res, next) => {
   const token = req.headers.authorization;
-  const response = new Response.Error(true, 'Unauthorized');
+  const response = new Response.Error(true, "Unauthorized");
 
   if (!token) {
     res.status(httpStatus.UNAUTHORIZED).json(response);

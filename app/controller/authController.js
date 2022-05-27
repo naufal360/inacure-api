@@ -1,10 +1,10 @@
-const httpStatus = require('http-status');
-const jwt = require('jsonwebtoken');
-const Response = require('../model/Response');
-const User = require('../model/User');
-const userValidator = require('../utils/userValidator');
-const signInValidator = require('../utils/signInValidator');
-const bcrypt = require('../utils/bcrypt');
+const httpStatus = require("http-status");
+const jwt = require("jsonwebtoken");
+const Response = require("../model/Response");
+const User = require("../model/User");
+const userValidator = require("../utils/userValidator");
+const signInValidator = require("../utils/signInValidator");
+const bcrypt = require("../utils/bcrypt");
 
 const signUp = async (req, res) => {
   let response = null;
@@ -13,7 +13,7 @@ const signUp = async (req, res) => {
 
     const users = await User.findOne({ email: request.email });
     if (users) {
-      response = new Response.Error(true, 'Email already exist');
+      response = new Response.Error(true, "Email already exist");
       res.status(httpStatus.BAD_REQUEST).json(response);
       return;
     }
@@ -33,7 +33,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   let response = null;
-  const signInErrorMessage = 'Invalid email or password';
+  const signInErrorMessage = "Invalid email or password";
   try {
     const request = await signInValidator.validateAsync(req.body);
 

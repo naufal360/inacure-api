@@ -1,4 +1,4 @@
-const Response = require('../model/Response');
+const Response = require("../model/Response");
 
 const getUser = (req, res) => {
   const user = req.currentUser;

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const signInValidator = Joi.object({
   email: Joi.string().email().required(),

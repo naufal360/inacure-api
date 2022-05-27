@@ -38,7 +38,7 @@ const articleSchema = new mongoose.Schema({
   codeIdentity: {
     type: Number,
     required: true,
-  }
+  },
 });
 
 const Article = mongoose.model("Article", articleSchema);

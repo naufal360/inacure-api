@@ -35,7 +35,7 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
-      codeIdentity
+      codeIdentity,
     });
 
     const articleSave = await article.save();

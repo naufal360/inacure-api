@@ -1,18 +1,21 @@
 const tf = require("@tensorflow/tfjs-node");
 const fs = require("fs");
-const Response = require('../model/Response');
-const httpStatus = require('http-status');
-const Article = require('../model/Article');
+const axios = require("axios");
+const httpStatus = require("http-status");
+const { Storage } = require("@google-cloud/storage");
 
-function readImage(path) {
-  //reads the entire contents of a file.
-  //readFileSync() is synchronous and blocks execution until finished.
-  console.log(path);
-  const imageBuffer = fs.readFileSync(path);
+const Response = require("../model/Response");
+const Article = require("../model/Article");
+const processFile = require("../middleware/uploadFile");
+const { format } = require("util");
 
-  //Given the encoded bytes of an image, it returns a 3D or 4D tensor of the decoded image. Supports BMP, GIF, JPEG and PNG formats.
-  // decode image to tensor and transform image channel to 3
-  // e.g [224, 224, 4] image will be transformed to [224, 224, 3]
+const storage = new Storage({ keyFilename: "env.json" });
+const bucket = storage.bucket("bangkit-inacure");
+
+async function readImage(path) {
+  const response = await axios.get(path, { responseType: "arraybuffer" });
+  const imageBuffer = Buffer.from(response.data, "binary");
+  console.log("imgBuffer", imageBuffer);
   const tfimage = tf.node.decodeImage(imageBuffer, 3);
   const resized = tf.image.resizeBilinear(tfimage, [224, 224]).toFloat();
 
@@ -22,6 +25,7 @@ function readImage(path) {
 
   //We add a dimension to get a batch shape
   const batched = normalized.expandDims(0);
+  console.log("isi batched: ", batched);
   return batched;
 }
 
@@ -31,47 +35,59 @@ function argMax(array) {
     .reduce((r, a) => (a[0] > r[0] ? a : r));
 }
 
-async function makePrediction(req, res, next) {
-  console.log("Masuk");
-  if (!req.file) {
-    res.status(400).send({
-      status: false,
-      data: "No File is selected.",
-    });
-    return;
-  }
+async function predict(url) {
+  const image = await readImage(url);
+
+  console.log("hasil image", image);
+  const model = await tf.loadGraphModel(
+    "https://storage.googleapis.com/bangkit-inacure/ml-model/vgg19_model/model.json"
+  );
+  const output = await model.predict(image).dataSync();
+  const predictions = argMax(output);
+  console.log("Classification Results:", predictions);
+  return predictions;
+}
+
+async function makePredictions(req, res, next) {
   try {
-    const file = req.file.path;
-    console.log(file);
+    await processFile(req, res);
 
-    if (!file) {
-      res.status(400).send({
-        status: false,
-        data: "No File is selected.",
-      });
+    if (!req.file) {
+      return res.status(400).send({ message: "Please upload a file!" });
     }
-    const image = readImage(file);
 
-    const model = await tf.loadGraphModel(
-      "file://vgg19_saved_model/model.json"
-    );
-    const output = await model.predict(image).dataSync();
-    const predictions = argMax(output);
-    console.log("Classification Results:", predictions);
-    const article = await Article.findOne({
-      codeIdentity: predictions[1],
+    const blob = bucket.file("ml-images/" + req.file.originalname);
+    const blobStream = blob.createWriteStream({
+      resumable: false,
     });
-    if(!article || predictions[0] <= 0.5) {
-      const response = new Response.Error(true, "Gambar tidak terdeteksi");
-      res.status(httpStatus.BAD_REQUEST).json(response);
-      return;
-    }
-    const response = new Response.Success(false, null, article);
-    res.status(httpStatus.OK).json(response);
 
+    blobStream.on("error", (err) => {
+      res.status(500).send({ message: err.message });
+    });
+
+    blobStream.on("finish", async (data) => {
+      const publicUrl = format(
+        `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+      );
+
+      const predictions = await predict(publicUrl);
+      console.log(predictions);
+      const article = await Article.findOne({
+        codeIdentity: predictions[1],
+      });
+      if (!article || predictions[0] <= 0.5) {
+        const response = new Response.Error(true, "Gambar tidak terdeteksi");
+        res.status(httpStatus.BAD_REQUEST).json(response);
+        return;
+      }
+      const response = new Response.Success(false, null, article);
+      res.status(httpStatus.OK).json(response);
+    });
+
+    blobStream.end(req.file.buffer);
   } catch (err) {
     console.log(err);
   }
 }
 
-module.exports = makePrediction;
+module.exports = makePredictions;
