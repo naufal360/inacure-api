@@ -8,5 +8,7 @@ const router = new express.Router();
 router.use(requireAuth);
 router.get("/", articleController.getArticles);
 router.post("/", articleController.postArticles);
+router.put("/update", articleController.updateArticle);
+router.delete("/delete", articleController.deleteArticle);
 
 module.exports = router;

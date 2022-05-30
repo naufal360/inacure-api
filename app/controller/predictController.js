@@ -56,7 +56,7 @@ async function makePredictions(req, res, next) {
       return res.status(400).send({ message: "Please upload a file!" });
     }
 
-    const blob = bucket.file("ml-images/" + req.file.originalname);
+    const blob = bucket.file("ml-images/" + req.file.originalname.split('.').join('-' + Date.now() + '.') );
     const blobStream = blob.createWriteStream({
       resumable: false,
     });
