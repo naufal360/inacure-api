@@ -1,13 +1,14 @@
 const httpStatus = require("http-status");
 const Response = require("../model/Response");
 const Article = require("../model/Article");
+const Upload = require('../model/Upload');
 const articleValidator = require("../utils/articleValidator");
 
 const postArticles = async (req, res) => {
   let response = null;
   try {
+
     const {
-      imageUrl,
       name,
       latinName,
       family,
@@ -17,8 +18,14 @@ const postArticles = async (req, res) => {
       codeIdentity,
     } = await articleValidator.validateAsync(req.body);
 
+    // get URL Images
+    const findUrl = await Upload.findOne({
+      name: name,
+    });
+    const imgUrl = findUrl.url;
+
     const article = new Article({
-      imageUrl,
+      imageUrl: imgUrl,
       name,
       latinName,
       family,
@@ -31,6 +38,8 @@ const postArticles = async (req, res) => {
     const articleSave = await article.save();
     response = new Response.Success(false, null, articleSave);
     res.status(httpStatus.OK).json(response);
+    
+    blobStream.end(req.file.buffer);
   } catch (error) {
     response = new Response.Error(true, error.message);
     res.status(httpStatus.BAD_REQUEST).json(response);
@@ -76,8 +85,8 @@ const deleteArticle = async (req, res) => {
     const deleteArticle = await Article.findByIdAndDelete(req.query.id);
     if(!deleteArticle){
       response = new Response.Error(true, notFoundId);
-        res.status(httpStatus.BAD_REQUEST).json(response);
-        return;
+      res.status(httpStatus.BAD_REQUEST).json(response);
+      return;
     }
     response = "Delete article success!"
     res.status(httpStatus.OK).json({ message: response});
