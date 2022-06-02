@@ -7,7 +7,7 @@ const articleValidator = Joi.object({
   family: Joi.string().required(),
   description: Joi.string().required(),
   ingredient: Joi.string().required(),
-  efficacy: Joi.array().items(Joi.string()),
+  efficacy: Joi.array().required(),
   codeIdentity: Joi.number().required(),
 });
 
