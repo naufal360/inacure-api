@@ -15,7 +15,7 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
-      codeIdentity,
+      onlineShop,
     } = await articleValidator.validateAsync(req.body);
 
     // get URL Images
@@ -23,6 +23,12 @@ const postArticles = async (req, res) => {
       name: name,
     });
     const imgUrl = findUrl.url;
+
+    if(!imgUrl){
+      response = new Response.Error(true, "URL gambar tidak ditemukan");
+      res.status(httpStatus.BAD_REQUEST).json(response);
+      return;
+    }
 
     const article = new Article({
       imageUrl: imgUrl,
@@ -32,7 +38,7 @@ const postArticles = async (req, res) => {
       description,
       ingredient,
       efficacy,
-      codeIdentity,
+      onlineShop,
     });
 
     const articleSave = await article.save();

@@ -22,6 +22,7 @@ const signUp = async (req, res) => {
     request.password = hashedPassword;
 
     const user = new User(request);
+    user.imageUrl = "https://storage.googleapis.com/bangkit-inacure/default-profile/default.png";
     const result = await user.save();
     response = new Response.Success(false, null, result);
     res.status(httpStatus.OK).json(response);

@@ -1,8 +1,9 @@
 const express = require("express");
-const multer = require("multer");
-const path = require("path");
 const predictController = require("../controller/predictController");
+const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();
+
+router.use(requireAuth);
 router.post("/", predictController);
 module.exports = router;

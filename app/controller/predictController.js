@@ -40,10 +40,11 @@ async function predict(url) {
 
   console.log("hasil image", image);
   const model = await tf.loadGraphModel(
-    "https://storage.googleapis.com/bangkit-inacure/ml-model/vgg19_model/model.json"
+    "https://storage.googleapis.com/bangkit-inacure/ml-model/vgg16_model/model.json"
   );
   const output = await model.predict(image).dataSync();
   const predictions = argMax(output);
+  console.log(output);
   console.log("Classification Results:", predictions);
   return predictions;
 }
@@ -53,7 +54,14 @@ async function makePredictions(req, res, next) {
     await processFile(req, res);
 
     if (!req.file) {
-      return res.status(400).send({ message: "Please upload a file!" });
+      const response = new Response.Error(400, "Please upload a file!" );
+      return res.status(httpStatus.BAD_REQUEST).json(response);
+    }
+
+    const ext = req.file.originalname.split('.').pop();
+    if (ext !== "png" && ext !== "jpg" && ext !== "jpeg") {
+      const response = new Response.Error(400, "Only images are allowed" );
+      return res.status(httpStatus.BAD_REQUEST).json(response);
     }
 
     const blob = bucket.file("ml-images/" + req.file.originalname.split('.').join('-' + Date.now() + '.') );
@@ -62,7 +70,8 @@ async function makePredictions(req, res, next) {
     });
 
     blobStream.on("error", (err) => {
-      res.status(500).send({ message: err.message });
+      const response = new Response.Error(500, err.message );
+      return res.status(httpStatus.BAD_REQUEST).json(response);
     });
 
     blobStream.on("finish", async (data) => {
@@ -71,12 +80,30 @@ async function makePredictions(req, res, next) {
       );
 
       const predictions = await predict(publicUrl);
+      const classes = {
+          0: 'Basil',
+          1: 'Bayam Hijau',
+          2: 'Jambu Biji',
+          3: 'Kelor',
+          4: 'Lemon',
+          5: 'Mangga',
+          6: 'Mint',
+          7: 'Pepaya',
+        };
+
       console.log(predictions);
+      console.log(classes[predictions[1]]);
+
       const article = await Article.findOne({
-        codeIdentity: predictions[1],
+        name: classes[predictions[1]],
       });
-      if (!article || predictions[0] <= 0.5) {
+      if (predictions[0] <= 0.5) {
         const response = new Response.Error(true, "Gambar tidak terdeteksi");
+        res.status(httpStatus.BAD_REQUEST).json(response);
+        return;
+      }
+      if (!article) {
+        const response = new Response.Error(true, "Artikel tidak ditemukan");
         res.status(httpStatus.BAD_REQUEST).json(response);
         return;
       }
@@ -86,7 +113,8 @@ async function makePredictions(req, res, next) {
 
     blobStream.end(req.file.buffer);
   } catch (err) {
-    console.log(err);
+    const response = new Response.Error(true, err.message);
+    res.status(httpStatus.BAD_REQUEST).json(response);
   }
 }
 

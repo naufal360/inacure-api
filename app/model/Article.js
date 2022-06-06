@@ -35,8 +35,8 @@ const articleSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  codeIdentity: {
-    type: Number,
+  onlineShop: {
+    type: String,
     required: true,
   },
 });

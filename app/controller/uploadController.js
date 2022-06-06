@@ -15,31 +15,35 @@ const postUpload = async (req, res) => {
         await processFile(req, res);
     
         if (!req.file) {
-          return res.status(400).send({ message: "Please upload a file!" });
+          const response = new Response.Error(400, "Please upload a image!" );
+          return res.status(httpStatus.BAD_REQUEST).json(response);
         }
 
         const ext = req.file.originalname.split('.').pop();
         if (ext !== "png" && ext !== "jpg" && ext !== "jpeg") {
-          return res.status(400).send({ message: "Only images are allowed" });
+          const response = new Response.Error(400, "Only images are allowed" );
+          return res.status(httpStatus.BAD_REQUEST).json(response);
         }
     
-        const blob = bucket.file("images/" + req.file.originalname);
+        const blob = bucket.file("images/" + req.file.originalname.toLowerCase().split(" ").join("-"));
         const blobStream = blob.createWriteStream({
           resumable: false,
         });
     
         blobStream.on("error", (err) => {
-          res.status(500).send({ message: err.message });
+          const response = new Response.Error(500, err.message );
+          return res.status(httpStatus.BAD_REQUEST).json(response);
         });
     
         blobStream.on("uploaded", async (data) => {
           const uploadUrl = format(
-            `https://storage.googleapis.com/${bucket.name}/${blob.name}`
+            `https://storage.googleapis.com/${bucket.name}/${blob.name.toLowerCase()}`
           );
         });
 
-        const uploadUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-        const uploadName = req.file.originalname.replace(/\.[^/.]+$/, "");
+        const uploadUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name.toLowerCase().split(" ").join("-")}`;
+        const requestName = req.file.originalname.replace(/\.[^/.]+$/, "");
+        const uploadName = requestName.charAt(0).toUpperCase() + requestName.slice(1);
         
         const upload = new Upload({
             url: uploadUrl,
@@ -80,7 +84,7 @@ const deleteUpload = async (req, res) => {
     const ext = path.extname(findImg.url);
     const findName = findImg.name;
     const fileName = findName + "" + ext;
-    const blob = bucket.file("images/" + fileName);
+    const blob = bucket.file("images/" + fileName.toLowerCase());
     const deleted = await blob.delete();
 
     console.log(`gs://${bucket.name}/${blob.name} deleted`);

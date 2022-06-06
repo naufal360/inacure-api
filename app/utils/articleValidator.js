@@ -8,7 +8,7 @@ const articleValidator = Joi.object({
   description: Joi.string().required(),
   ingredient: Joi.string().required(),
   efficacy: Joi.array().required(),
-  codeIdentity: Joi.number().required(),
+  onlineShop: Joi.string().required(),
 });
 
 module.exports = articleValidator;
