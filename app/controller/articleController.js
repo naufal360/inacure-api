@@ -44,8 +44,6 @@ const postArticles = async (req, res) => {
     const articleSave = await article.save();
     response = new Response.Success(false, null, articleSave);
     res.status(httpStatus.OK).json(response);
-    
-    blobStream.end(req.file.buffer);
   } catch (error) {
     response = new Response.Error(true, error.message);
     res.status(httpStatus.BAD_REQUEST).json(response);

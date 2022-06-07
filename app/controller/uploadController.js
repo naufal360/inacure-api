@@ -6,8 +6,8 @@ const httpStatus = require("http-status");
 const Response = require("../model/Response");
 const path = require('path');
 
-const storage = new Storage({ keyFilename: "key.json" });
-const bucket = storage.bucket("bangkit-inacure");
+const storage = new Storage({ keyFilename: "env.json" });
+const bucket = storage.bucket("inacure-storage");
 
 const postUpload = async (req, res) => {
     let response = null;

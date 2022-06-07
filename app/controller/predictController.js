@@ -10,7 +10,7 @@ const processFile = require("../middleware/uploadFile");
 const { format } = require("util");
 
 const storage = new Storage({ keyFilename: "env.json" });
-const bucket = storage.bucket("bangkit-inacure");
+const bucket = storage.bucket("inacure-storage");
 
 async function readImage(path) {
   const response = await axios.get(path, { responseType: "arraybuffer" });
@@ -40,7 +40,7 @@ async function predict(url) {
 
   console.log("hasil image", image);
   const model = await tf.loadGraphModel(
-    "https://storage.googleapis.com/bangkit-inacure/ml-model/vgg16_model/model.json"
+    "https://storage.googleapis.com/inacure-storage/ml-model/vgg16_saved_model/model.json"
   );
   const output = await model.predict(image).dataSync();
   const predictions = argMax(output);
@@ -81,14 +81,16 @@ async function makePredictions(req, res, next) {
 
       const predictions = await predict(publicUrl);
       const classes = {
-          0: 'Basil',
-          1: 'Bayam Hijau',
-          2: 'Jambu Biji',
-          3: 'Kelor',
-          4: 'Lemon',
-          5: 'Mangga',
-          6: 'Mint',
-          7: 'Pepaya',
+          0: 'Anggur',
+          1: 'Apel',
+          2: 'Ceri',
+          3: 'Delima',
+          4: 'Jamblang',
+          5: 'Jambu Biji',
+          6: 'Kedelai',
+          7: 'Lemon',
+          8: 'Mangga',
+          9: 'Pepaya',
         };
 
       console.log(predictions);
