@@ -100,12 +100,12 @@ async function makePredictions(req, res, next) {
         name: classes[predictions[1]],
       });
       if (predictions[0] <= 0.5) {
-        const response = new Response.Error(true, "Gambar tidak terdeteksi");
+        const response = new Response.Error(true, "Can't detect the image!");
         res.status(httpStatus.BAD_REQUEST).json(response);
         return;
       }
       if (!article) {
-        const response = new Response.Error(true, "Artikel tidak ditemukan");
+        const response = new Response.Error(true, "Article not found!");
         res.status(httpStatus.BAD_REQUEST).json(response);
         return;
       }

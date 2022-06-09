@@ -25,7 +25,7 @@ const postArticles = async (req, res) => {
     const imgUrl = findUrl.url;
 
     if(!imgUrl){
-      response = new Response.Error(true, "URL gambar tidak ditemukan");
+      response = new Response.Error(true, "Image URL not found!");
       res.status(httpStatus.BAD_REQUEST).json(response);
       return;
     }

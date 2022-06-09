@@ -45,7 +45,8 @@
       "family": "string",
       "description": "string",
       "ingredient": "string",
-      "efficacy": "string"
+      "efficacy": ["string"],
+      "onlineShop": "string",
     }
   ]
 }
