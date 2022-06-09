@@ -6,6 +6,7 @@ const { Storage } = require("@google-cloud/storage");
 
 const Response = require("../model/Response");
 const Article = require("../model/Article");
+const History = require("../model/History");
 const processFile = require("../middleware/uploadFile");
 const { format } = require("util");
 
@@ -109,6 +110,29 @@ async function makePredictions(req, res, next) {
         res.status(httpStatus.BAD_REQUEST).json(response);
         return;
       }
+
+      // Post history
+      const userId = req.currentUser._id;
+      const emailUser = req.currentUser.email;
+      const predictNum = predictions[0];
+      const percentage = predictNum * 100;
+      const predictStr = percentage.toFixed().toString() + "%";
+      const articleHis = classes[predictions[1]];
+
+      if(!articleHis){
+        articleHis = "N/A";
+      };
+
+      const history = new History({
+        userId: userId,
+        email: emailUser,
+        imageUrl: publicUrl,
+        articleName: articleHis,
+        predictRate: predictStr,
+      });
+
+      await history.save();
+      
       const response = new Response.Success(false, null, article);
       res.status(httpStatus.OK).json(response);
     });
