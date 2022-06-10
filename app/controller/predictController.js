@@ -60,7 +60,7 @@ async function makePredictions(req, res, next) {
     }
 
     const ext = req.file.originalname.split('.').pop();
-    if (ext !== "png" && ext !== "jpg" && ext !== "jpeg") {
+    if (ext !== "png" && ext !== "jpg" && ext !== "jpeg" && ext !== "PNG" && ext !== "JPG" && ext !== "JPEG") {
       const response = new Response.Error(400, "Only images are allowed" );
       return res.status(httpStatus.BAD_REQUEST).json(response);
     }

@@ -39,11 +39,34 @@
   "message": "string",
   "data": [
     {
-      "name":"String",
-      "email": "String",
-      "password": "String",
-      "imageUrl": "String",
-      "createdAt": "String",
+      "name":"string",
+      "email": "string",
+      "password": "string",
+      "imageUrl": "string",
+      "createdAt": "string",
+    }
+  ]
+}
+```
+
+## Profile Images
+
+### Get History Profile Images
+
+- Method: GET
+- Url: /api/v1/users/profile/images
+- Header: Bearer token
+
+```json
+{
+  "error": "boolean",
+  "message": "string",
+  "data": [
+    {
+      "userId":"string",
+      "email": "string",
+      "imageUrl": "string",
+      "createdAt": "string",
     }
   ]
 }
@@ -63,12 +86,12 @@
   "message": "string",
   "data": [
     {
-      "userId":"String",
-      "email": "String",
-      "imageUrl": "String",
-      "articleName": "String",
-      "predictRate": "String",
-      "createdAt": "String",
+      "userId":"string",
+      "email": "string",
+      "imageUrl": "string",
+      "articleName": "string",
+      "predictRate": "string",
+      "createdAt": "string",
     }
   ]
 }
