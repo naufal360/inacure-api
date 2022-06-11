@@ -41,7 +41,7 @@ async function predict(url) {
 
   console.log("hasil image", image);
   const model = await tf.loadGraphModel(
-    "https://storage.googleapis.com/inacure-storage/ml-model/vgg16_saved_model/model.json"
+    "https://storage.googleapis.com/inacure-storage/ml-model/iv3_saved_model/model.json"
   );
   const output = await model.predict(image).dataSync();
   const predictions = argMax(output);
@@ -91,7 +91,6 @@ async function makePredictions(req, res, next) {
           6: 'Kedelai',
           7: 'Lemon',
           8: 'Mangga',
-          9: 'Pepaya',
         };
 
       console.log(predictions);
