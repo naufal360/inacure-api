@@ -84,7 +84,7 @@ const deleteUpload = async (req, res) => {
     const ext = path.extname(findImg.url);
     const findName = findImg.name;
     const fileName = findName + "" + ext;
-    const blob = bucket.file("images/" + fileName.toLowerCase());
+    const blob = bucket.file("images/" + fileName.toLowerCase().split(" ").join("-"));
     const deleted = await blob.delete();
 
     console.log(`gs://${bucket.name}/${blob.name} deleted`);
@@ -96,7 +96,7 @@ const deleteUpload = async (req, res) => {
       res.status(httpStatus.BAD_REQUEST).json(response);
       return;
     }
-    response = "Detele Success!"
+    response = `Detele ${blob.name} Success!`;
     res.status(httpStatus.OK).json({ message: response});
   } catch (error) {
     response = new Response.Error(true, error.message);
