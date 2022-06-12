@@ -99,7 +99,7 @@ async function makePredictions(req, res, next) {
       const article = await Article.findOne({
         name: classes[predictions[1]],
       });
-      if (predictions[0] <= 0.5) {
+      if (predictions[0] < 0.75) {
         const response = new Response.Error(true, "Can't detect the image!");
         res.status(httpStatus.BAD_REQUEST).json(response);
         return;
